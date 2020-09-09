@@ -3,17 +3,17 @@
 from api.v1.views import app_views
 from flask import jsonify, make_response, abort, request
 from models import storage
-from models.review import Review
+from models.place import Place
 from models.engine.db_storage import classes
 
 
-viewer = "Review"
-places = "Place"
+viewer = "Place"
+places = "City"
 
 
-@app_views.route("/places/<amenity_id>/reviews", strict_slashes=False,
+@app_views.route("/city/<amenity_id>/places", strict_slashes=False,
                  methods=["GET"])
-def gplace(amenity_id):
+def gcplace(amenity_id):
     """GETs amenities or amenity id
     """
     state = storage.get(places, amenity_id)
@@ -22,8 +22,9 @@ def gplace(amenity_id):
     return make_response(jsonify({"error": "Not found"}), 404)
 
 
-@app_views.route("/reviews/<amenity_id>", methods=["GET"])
-def greview(amenity_id):
+@app_views.route("/places/<amenity_id>", methods=["GET"],
+                 strict_slashes=False)
+def gpplace(amenity_id):
     """Gotta not forget the comment"""
     state = storage.get(viewer, amenity_id)
     if state:
@@ -31,8 +32,9 @@ def greview(amenity_id):
     return make_response(jsonify({"error": "Not found"}), 404)
 
 
-@app_views.route("/reviews/<amenity_id>", methods=["DELETE"])
-def dreview(amenity_id):
+@app_views.route("/place/<amenity_id>", methods=["DELETE"],
+                 strict_slashes=False)
+def dplace(amenity_id):
     """DELETE states
     """
     state = storage.get(viewer, amenity_id)
@@ -43,12 +45,12 @@ def dreview(amenity_id):
     return make_response(jsonify({"error": "Not found"}), 404)
 
 
-@app_views.route("/places/<place_id>/reviews",
+@app_views.route("/cities/<place_id>/places",
                  strict_slashes=False, methods=["POST"])
-def pplacereview(place_id):
+def pplacerevieew(place_id):
     """POST states
     """
-    lili = ["text", "user_id"]
+    lili = ["name", "user_id"]
     retrieve = request.get_json(force=True, silent=True)
     if retrieve:
         state = storage.get(places, place_id)
@@ -65,8 +67,9 @@ def pplacereview(place_id):
     abort(400, "Not a JSON")
 
 
-@app_views.route("/reviews/<amenity_id>", methods=["PUT"])
-def pureview(amenity_id):
+@app_views.route("/places/<amenity_id>", methods=["PUT"],
+                 strict_slashes=False)
+def puureview(amenity_id):
     """PUTs states
     """
     state = storage.get(viewer, amenity_id)
